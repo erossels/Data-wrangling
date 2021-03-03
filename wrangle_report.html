@@ -14259,11 +14259,11 @@ a.anchor-link {
 
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h1 id="Wrangle-report">Wrangle report<a class="anchor-link" href="#Wrangle-report">&#182;</a></h1><h3 id="By-Eduardo-Rossel">By Eduardo Rossel<a class="anchor-link" href="#By-Eduardo-Rossel">&#182;</a></h3><p>The following reports is meant to summarize the efforts made in the Data Wrangling of the WeRateDogs's tweet archive. The WeRateDogs account refers itself as "Your Only Source For Professional Dog Ratings". Each of their tweets includes a brief description of the dog, the dog name, dog "stage", a rating and an image of the dog. We'll describe the main steps in wrangling the data in order to gain some interesting insights about this archive. The full detail of steps and commands used can be found in _wrangle<em>act.ipynb</em></p>
-<h2 id="Gathering">Gathering<a class="anchor-link" href="#Gathering">&#182;</a></h2><p>For starter, we are provided with an "enhanced" twitter archive for the We Rate Dogs's account. This file is given to us as a .csv file, with which we can create our first dataset called <strong>archive</strong>.</p>
-<p>We will use Twitter's API to access the complete information of tweets and retrieve aditional information for each one of them, such as: retweets count, favorite count and hashtags used. To do so, we use the <em>Tweepy</em> library and store each tweet's entire set of JSON data in a file called tweet_json.txt file. Each tweet's JSON data will be written into it's own line. We will later read this .txt line by line to create a dataframe called <strong>api_archive</strong>. The described process required to obtain consumer and access token provided after creating a developer's account.</p>
+<h1 id="Wrangle-report">Wrangle report<a class="anchor-link" href="#Wrangle-report">&#182;</a></h1><h3 id="By-Eduardo-Rossel">By Eduardo Rossel<a class="anchor-link" href="#By-Eduardo-Rossel">&#182;</a></h3><p>This reports summarizes the efforts made in the Data Wrangling of the WeRateDogs's tweet archive. The account refers itself as "Your Only Source For Professional Dog Ratings". Each tweet includes a brief description of the dog, its name, "stage", rating and an image of the dog. We'll describe the main steps in wrangling the data to create interesting insights about this archive. The full detail of the process can be found in _wrangle<em>act.ipynb</em></p>
+<h2 id="Gathering">Gathering<a class="anchor-link" href="#Gathering">&#182;</a></h2><p>We are provided with an "enhanced" twitter archive for the WeRateDogs's account. This file is given to us as a .csv file, with which we can create our first dataset called <strong>archive</strong>.</p>
+<p>We will use Twitter's API to access the complete information of tweets and retrieve aditional information for each one of them, such as: retweets count, favorite count and hashtags used. To do so, we use the <em>Tweepy</em> library and store each tweet's entire set of JSON data in a file called tweet_json.txt file. Each tweet's JSON data will be written into it's own line. We will later read this .txt to create a dataframe called <strong>api_archive</strong>.</p>
 <p>Finally, we are provided with a table full of image predictions. For getting this file, we are given an url. For downloading the file we use the <em>request</em> library and then convert the .tsv file into our third dataframe, "image_predictions"</p>
-<h2 id="Assesing">Assesing<a class="anchor-link" href="#Assesing">&#182;</a></h2><p>Using visual and programmatical tools, we assess our 3 dataframes: <em>archive</em>, _api<em>archive</em> and _image<em>predictions</em>. For programmatical assesment several methods are used such as pandas's info, describe, duplicated, value_counts, among others. The following issues were identified:</p>
+<h2 id="Assesing">Assesing<a class="anchor-link" href="#Assesing">&#182;</a></h2><p>We assessed 3 dataframes: <em>archive</em>, _api<em>archive</em> and _image<em>predictions</em>. For programmatical assesment several methods are used such as pandas's info, describe, duplicated, value_counts, among others. The following issues were identified:</p>
 <p><strong>Quality</strong></p>
 <ul>
 <li><em>Archive's dataframe:</em> <ul>
@@ -14280,7 +14280,7 @@ a.anchor-link {
 </ul>
 </li>
 <li><em>Api_archive's dataframe:</em><ul>
-<li>Date of creation of tweets is Object Type, must be datetime</li>
+<li>Date of creation of tweets is Object, must be datetime</li>
 </ul>
 </li>
 </ul>
@@ -14303,12 +14303,12 @@ a.anchor-link {
 <h3 id="Fixing-Tidiness">Fixing Tidiness<a class="anchor-link" href="#Fixing-Tidiness">&#182;</a></h3><p>In this case two tables were kept: archive and our image predictions dataset. Even though we could join all tables in only one data set. These two tables keep different types of observational units. The first one, refers to tweets and their content, and the second one to predictions of the breed of the dogs made by a neural network. The actions performed for this were:</p>
 <ul>
 <li>Join archive and api_archive's dataframe.</li>
-<li>Use the melt function to create a column with the Type of Dog.</li>
-<li>Transform p1, p1_conf, p1_dog, p2, p2_conf, p2_dog and p3, p3_conf, p3_dog into predicted_breed, p_conf and p_dog columns by using concat method</li>
+<li>Use melt function to create a column with the Type of Dog.</li>
+<li>Transform predicted_breed, p_conf and p_dog into one column each by using concat method</li>
 </ul>
 <h3 id="&#160;Fixing-Quality">&#160;Fixing Quality<a class="anchor-link" href="#&#160;Fixing-Quality">&#182;</a></h3><ul>
 <li>Recalculate the score numerator for all the dogs. We'll use a regular expresion to extract each numerator. Also, checking and forcing that the denominator is 10.</li>
-<li>Drop the rows where rating numerator is 1776 and 420, as they dont represen actual ratings. Change the value of rating numerator in other cases.</li>
+<li>Drop the rows where rating numerator seems off.</li>
 <li>Change the type of data of timestamp to datetime.</li>
 <li>Extracting the dog stages from the text.</li>
 <li>Extract the names of the pets from text.</li>
